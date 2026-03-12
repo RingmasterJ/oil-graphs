@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Brent Crude - BBC Broadcast Overlay</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+</head>
+<body>
+
+<div id="header">
+  <div class="title-bar">LATEST OIL PRICES</div>
+  <div class="subtitle">Brent Crude 3-month futures</div>
+  <div class="attribution">Data courtesy Intercontinental Exchange</div>
+</div>
+<div id="chart-container"></div>
+
+<!-- Persistent price label elements (never destroyed/recreated) -->
+<div id="price-label">
+  <div id="pl-box"></div>
+  <div id="pl-pct"></div>
+  <div id="pl-time"></div>
+  <div id="pl-dash"></div>
+  <div id="pl-ring" class="pulse-dot"></div>
+</div>
+
+<script src="chart.js"></script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Brent Crude - BBC Broadcast Overlay</title>
+<style>
+  @font-face { font-family: 'BBC Reith Sans'; font-display: swap; font-weight: 400; src: url(https://static.files.bbci.co.uk/fonts/reith/2.512/BBCReithSans_W_Rg.woff2) format('woff2'); }
+  @font-face { font-family: 'BBC Reith Sans'; font-display: swap; font-weight: 700; src: url(https://static.files.bbci.co.uk/fonts/reith/2.512/BBCReithSans_W_Bd.woff2) format('woff2'); }
+  @font-face { font-family: 'BBC Reith Sans'; font-display: swap; font-weight: 900; src: url(https://static.files.bbci.co.uk/fonts/reith/2.512/BBCReithSans_W_ExBd.woff2) format('woff2'); }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: white; overflow: hidden; font-family: 'BBC Reith Sans', sans-serif; }
+
+  #header { position: fixed; top: 8%; left: 10%; z-index: 10; }
+  #header .title-bar {
+    background: #017962; color: white; font-size: 36px; font-weight: 900;
+    padding: 8px 18px; letter-spacing: 1px; text-transform: uppercase; display: inline-block;
+  }
+  #header .subtitle { font-size: 22px; color: #1a1a1a; font-weight: 400; margin-top: 6px; padding-left: 2px; }
+
+  #usd-label {
+    position: fixed; top: 8%; right: 12%; z-index: 10;
+    font-size: 22px; font-weight: 700; color: #1a1a1a; text-align: right; line-height: 1.3;
+    font-family: 'BBC Reith Sans', sans-serif;
+  }
+
+  #chart-container { position: fixed; top: 20%; left: 10%; width: 78%; height: 58%; }
+  #price-badge { position: fixed; top: 0; left: 0; z-index: 20; pointer-events: none; }
+
+  /* Highcharts overrides */
+  .highcharts-background { fill: white !important; }
+  .highcharts-grid-line { stroke: #c8c8e0 !important; stroke-width: 1px !important; }
+  .highcharts-series path, .highcharts-series-0 path { stroke: #00BC97 !important; stroke-width: 3px !important; fill: none !important; }
+  .highcharts-yaxis-labels text { font-size: 22px !important; fill: #1a1a1a !important; font-family: 'BBC Reith Sans', sans-serif !important; font-weight: 700 !important; }
+  .highcharts-xaxis-labels text { font-size: 18px !important; fill: #1a1a1a !important; font-family: 'BBC Reith Sans', sans-serif !important; font-weight: 700 !important; }
+  .highcharts-axis-line, .highcharts-tick { stroke: transparent !important; }
+  .highcharts-credits, .highcharts-contextbutton { display: none !important; }
+
+  #status { position: fixed; bottom: 3%; right: 4%; font-size: 13px; color: #bbb; font-family: 'BBC Reith Sans', sans-serif; }
+  #error-msg { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 24px; color: #cc0000; display: none; text-align: center; }
+</style>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+</head>
+<body>
+
+<div id="header">
+  <div class="title-bar">LATEST OIL PRICES</div>
+  <div class="subtitle">ICE Brent Crude front-month futures (intraday)</div>
+</div>
+<div id="usd-label">USD PER<br>BARREL</div>
+<div id="chart-container"></div>
+<div id="price-badge"></div>
+<div id="status"></div>
+<div id="error-msg"></div>
+
+<script>
+(function() {
+  'use strict';
+
+  var API_BASE = 'https://www.ice.com';
+  var CHART_URL = API_BASE + '/marketdata/api/productguide/charting/data/current-day?marketId=6018439';
+  var REFRESH_MS = 60000;
+  var chart = null;
+
+  Highcharts.setOptions({ global: { useUTC: true } });
+
+  function parseGMT(str) {
+    return new Date(str + ' GMT').getTime();
+  }
+
+  function fetchData() {
+    return fetch(CHART_URL)
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function(data) {
+        return data.bars.map(function(b) {
+          return [parseGMT(b[0]), b[1]];
+        });
+      });
+  }
+
+  function createChart(points) {
+    var ys = points.map(function(p) { return p[1]; });
+    var dataMin = Math.min.apply(null, ys);
+    var dataMax = Math.max.apply(null, ys);
+    var padding = (dataMax - dataMin) * 0.15;
+
+    chart = Highcharts.chart('chart-container', {
+      chart: {
+        type: 'line', backgroundColor: 'white',
+        spacing: [10, 80, 40, 20], animation: false
+      },
+      title: { text: null },
+      legend: { enabled: false },
+      credits: { enabled: false },
+      exporting: { enabled: false },
+      tooltip: { enabled: false },
+      plotOptions: {
+        series: {
+          enableMouseTracking: false,
+          marker: { enabled: false },
+          states: { hover: { enabled: false } },
+          animation: false
+        }
+      },
+      xAxis: {
+        type: 'datetime',
+        labels: {
+          style: { fontSize: '18px', color: '#1a1a1a', fontFamily: '"BBC Reith Sans", sans-serif', fontWeight: '700' },
+          format: '{value:%l %p}'
+        },
+        gridLineWidth: 1, gridLineColor: '#c8c8e0',
+        lineColor: 'transparent', tickColor: 'transparent'
+      },
+      yAxis: {
+        title: { text: null },
+        opposite: true, tickInterval: 1,
+        min: Math.floor(dataMin - padding),
+        max: Math.ceil(dataMax),
+        labels: {
+          style: { fontSize: '22px', color: '#1a1a1a', fontFamily: '"BBC Reith Sans", sans-serif', fontWeight: '700' },
+          formatter: function() { return '$' + this.value; },
+          align: 'left', x: 5
+        },
+        gridLineColor: '#c8c8e0', gridLineWidth: 1
+      },
+      series: [{ data: points, color: '#00BC97', lineWidth: 3 }]
+    });
+  }
+
+  function updateChart(points) {
+    var ys = points.map(function(p) { return p[1]; });
+    var dataMin = Math.min.apply(null, ys);
+    var dataMax = Math.max.apply(null, ys);
+    var padding = (dataMax - dataMin) * 0.15;
+    chart.series[0].setData(points, false);
+    chart.yAxis[0].setExtremes(Math.floor(dataMin - padding), Math.ceil(dataMax), false);
+    chart.redraw();
+  }
+
+  function updatePriceBadge() {
+    if (!chart || !chart.series[0].data.length) return;
+    var lastPoint = chart.series[0].data[chart.series[0].data.length - 1];
+    if (!lastPoint || lastPoint.plotX === undefined) return;
+
+    var price = lastPoint.y;
+    var time = new Date(lastPoint.x);
+    var timeStr = time.toLocaleTimeString('en-GB', {
+      timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit', hour12: false
+    });
+
+    var px = lastPoint.plotX + chart.plotLeft;
+    var py = lastPoint.plotY + chart.plotTop;
+    var el = document.getElementById('chart-container');
+    var rect = el.getBoundingClientRect();
+    var absX = rect.left + px;
+    var absY = rect.top + py;
+    var axisBottom = rect.top + chart.plotTop + chart.plotHeight;
+    var stemH = axisBottom - absY - 12;
+    if (stemH < 0) stemH = 0;
+
+    document.getElementById('price-badge').innerHTML =
+      '<div style="position:fixed;left:'+(absX-8)+'px;top:'+(absY-8)+'px;width:16px;height:16px;background:white;border:3px solid #00BC97;border-radius:50%;z-index:100001;"></div>'
+      + '<div style="position:fixed;left:'+(absX+16)+'px;top:'+(absY-18)+'px;background:#00BC97;color:white;font-size:28px;font-weight:700;padding:5px 14px;z-index:100000;font-family:\'BBC Reith Sans\',sans-serif;white-space:nowrap;">$'+price.toFixed(2)+'</div>'
+      + '<div style="position:fixed;left:'+(absX-1)+'px;top:'+(absY+10)+'px;width:2px;height:'+stemH+'px;background:#00BC97;z-index:99998;"></div>'
+      + '<div style="position:fixed;left:'+(absX+16)+'px;top:'+(absY+26)+'px;color:#888;font-size:13px;font-weight:400;z-index:100002;font-family:\'BBC Reith Sans\',sans-serif;line-height:1.5;background:white;padding:2px 6px;white-space:nowrap;">As of '+timeStr+'<br>London time</div>';
+
+    // Hide Y-axis labels near current price
+    document.querySelectorAll('.highcharts-yaxis-labels text').forEach(function(t) {
+      var val = parseInt(t.textContent.replace('$', ''));
+      t.style.display = (Math.abs(val - price) < 1.5) ? 'none' : '';
+    });
+  }
+
+  function refresh() {
+    fetchData().then(function(points) {
+      if (!chart) {
+        createChart(points);
+      } else {
+        updateChart(points);
+      }
+      updatePriceBadge();
+      document.getElementById('error-msg').style.display = 'none';
+      var now = new Date();
+      document.getElementById('status').textContent = 'Updated ' + now.toLocaleTimeString('en-GB', {
+        timeZone: 'Europe/London', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false
+      }) + ' GMT';
+    }).catch(function(err) {
+      document.getElementById('error-msg').textContent = 'Data unavailable\n' + err.message;
+      document.getElementById('error-msg').style.display = 'block';
+    });
+  }
+
+  // Initial load
+  refresh();
+  // Auto-refresh
+  setInterval(refresh, REFRESH_MS);
+})();
+</script>
+</body>
+</html>

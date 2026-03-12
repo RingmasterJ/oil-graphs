@@ -1,0 +1,109 @@
+/* === BBC Reith Sans === */
+@font-face { font-family: 'BBC Reith Sans'; font-display: block; font-weight: 400; src: url(https://static.files.bbci.co.uk/fonts/reith/2.512/BBCReithSans_W_Rg.woff2) format('woff2'); }
+@font-face { font-family: 'BBC Reith Sans'; font-display: block; font-weight: 700; src: url(https://static.files.bbci.co.uk/fonts/reith/2.512/BBCReithSans_W_Bd.woff2) format('woff2'); }
+@font-face { font-family: 'BBC Reith Sans'; font-display: block; font-weight: 900; src: url(https://static.files.bbci.co.uk/fonts/reith/2.512/BBCReithSans_W_ExBd.woff2) format('woff2'); }
+
+/* === Pulse animation (dot only) === */
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+.pulse-dot { animation: pulse 2s ease-in-out infinite; }
+
+/* === Reset === */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: white;
+  overflow: hidden;
+  font-family: 'BBC Reith Sans', sans-serif;
+}
+
+/* === Title bar (BBC 14:9 safe area) === */
+#header {
+  position: fixed;
+  top: 9.5%;
+  left: 17%;
+  z-index: 99999;
+  font-family: 'BBC Reith Sans', sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+#header .title-bar {
+  display: inline-block;
+  background: #017962;
+  color: white;
+  font-size: 42px;
+  font-weight: 900;
+  padding: 8px 18px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+#header .subtitle {
+  font-size: 24px;
+  color: #000000;
+  font-weight: 700;
+  padding-left: 2px;
+}
+#header .attribution {
+  font-size: 18px;
+  color: #606060;
+  font-weight: 400;
+  padding-left: 2px;
+}
+
+/* === Chart container (BBC 14:9 safe area) === */
+#chart-container {
+  position: fixed;
+  top: 24%;
+  left: 17%;
+  width: 68%;
+  height: 49%;
+}
+
+/* === Price label elements (persistent DOM, positioned by JS) === */
+#price-label {
+  pointer-events: none;
+}
+#pl-box {
+  position: fixed;
+  background: #00BC97;
+  color: white;
+  font-size: 40px;
+  font-weight: 700;
+  padding: 6px 16px;
+  z-index: 100000;
+  font-family: 'BBC Reith Sans', sans-serif;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+#pl-pct {
+  position: fixed;
+  font-size: 20px;
+  font-weight: 700;
+  z-index: 100002;
+  font-family: 'BBC Reith Sans', sans-serif;
+  white-space: nowrap;
+}
+#pl-time {
+  position: fixed;
+  font-size: 17px;
+  font-weight: 400;
+  color: #606060;
+  z-index: 100002;
+  font-family: 'BBC Reith Sans', sans-serif;
+  white-space: nowrap;
+}
+#pl-dash {
+  position: fixed;
+  width: 0;
+  border-left: 2px dashed #00BC97;
+  z-index: 99998;
+}
+#pl-ring {
+  position: fixed;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: 3px solid #00BC97;
+  border-radius: 50%;
+  z-index: 100001;
+  box-sizing: border-box;
+}
