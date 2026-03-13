@@ -57,10 +57,29 @@ body {
   width: 68%;
   height: 49%;
 }
+/* White overlay masks gridline endpoints that form visible "borders" */
+/* Positioned at ECharts grid boundaries (grid: top 10, right 110, bottom 55, left 60) */
+#chart-container::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 54px;
+  right: 104px;
+  bottom: 49px;
+  border: 6px solid white;
+  pointer-events: none;
+  z-index: 1;
+}
 
 /* === Price label elements (persistent DOM, positioned by JS) === */
+/* All price label children transition smoothly when repositioned */
 #price-label {
   pointer-events: none;
+}
+#price-label > div {
+  transition: left 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+              top 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+              height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 #pl-box {
   position: fixed;
@@ -89,7 +108,7 @@ body {
   color: #606060;
   z-index: 100002;
   font-family: 'BBC Reith Sans', sans-serif;
-  white-space: nowrap;
+  line-height: 1.3;
 }
 #pl-dash {
   position: fixed;
@@ -107,3 +126,36 @@ body {
   z-index: 100001;
   box-sizing: border-box;
 }
+
+/* === Standby mode: start hidden, animate in when taken live === */
+body.standby #header,
+body.standby #chart-container,
+body.standby #price-label {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* --- Entrance keyframes (BBC GEL Elevate easing) --- */
+@keyframes enter-slide-left {
+  from { transform: translateX(-40px); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+@keyframes enter-fade-up {
+  from { transform: translateY(12px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@keyframes enter-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* --- Entrance classes (applied by JS on go-live) --- */
+.enter-slide   { animation: enter-slide-left 0.5s cubic-bezier(0.50, 0, 0.50, 1) both; }
+.enter-fade-up { animation: enter-fade-up     0.4s cubic-bezier(0.50, 0, 0.50, 1) both; }
+.enter-fade    { animation: enter-fade-in      0.6s cubic-bezier(0.50, 0, 0.50, 1) both; }
+
+/* --- Stagger delays --- */
+.enter-d1 { animation-delay: 0.08s; }
+.enter-d2 { animation-delay: 0.25s; }
+.enter-d3 { animation-delay: 0.45s; }
+.enter-d4 { animation-delay: 0.65s; }

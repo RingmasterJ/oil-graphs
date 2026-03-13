@@ -1,0 +1,574 @@
+/**
+ * BBC GEL Design Tokens
+ * Version: 1.0.0
+ * 
+ * Usage: Set data-brand and data-theme attributes on <html>
+ * <html data-brand="news" data-theme="light">
+ */
+
+/* ============================================
+   BASE TOKENS
+   ============================================ */
+
+:root {
+  /* Spacing (8px base unit) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Border Radius */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 400ms ease;
+
+  /* Motion - Elevate Easing */
+  --ease-elevate: cubic-bezier(0.50, 0.00, 0.50, 1.00);
+
+  /* Typography */
+  --font-sans: ReithSans, Helvetica, Arial, sans-serif;
+  --font-serif: ReithSerif, Georgia, serif;
+  --font-condensed: ReithSansCondensed, Arial Narrow, sans-serif;
+
+  /* Neutral Grays (consistent across brands) */
+  --white: #ffffff;
+  --black: #000000;
+  --grey-100-a: #e6e6e6;
+  --grey-200-b: #c8c8c8;
+  --grey-300-c: #acacac;
+  --grey-400-c: #8c8c8c;
+  --grey-500-b: #6e6e6e;
+  --grey-600-a: #545454;
+  --grey-700: #3c3c3c;
+  --grey-800: #282828;
+  --grey-900: #141414;
+
+  /* Semantic Colors - Feedback */
+  --success-dark: #065f06;
+  --success-primary: #0a7b0a;
+  --success-light: #c8e6c8;
+
+  --warning-dark: #b38200;
+  --warning-primary: #e6a700;
+  --warning-light: #fff4cc;
+
+  --error-dark: #9b2927;
+  --error-primary: #c43331;
+  --error-light: #eebfbe;
+
+  --info-dark: #00508a;
+  --info-primary: #0068b3;
+  --info-light: #cce0f0;
+}
+
+
+/* ============================================
+   BRAND: BBC NEWS (Default)
+   ============================================ */
+
+:root,
+[data-brand="news"] {
+  --primary: #bb1919;
+  --dark: #820000;
+  --light: #eebfbe;
+  --very-light: #f6e7e6;
+}
+
+
+/* ============================================
+   BRAND: BBC SPORT
+   ============================================ */
+
+[data-brand="sport"] {
+  --primary: #ffe500;
+  --dark: #c7b200;
+  --light: #fff9cc;
+  --very-light: #fffce6;
+}
+
+
+/* ============================================
+   BRAND: BBC iPLAYER
+   ============================================ */
+
+[data-brand="iplayer"] {
+  --primary: #ff4c98;
+  --dark: #c7286e;
+  --light: #ffd6e8;
+  --very-light: #ffebf4;
+}
+
+
+/* ============================================
+   BRAND: BBC SOUNDS
+   ============================================ */
+
+[data-brand="sounds"] {
+  --primary: #ff4c00;
+  --dark: #c73a00;
+  --light: #ffd6c4;
+  --very-light: #ffebe2;
+}
+
+
+/* ============================================
+   BRAND: BBC BITESIZE
+   ============================================ */
+
+[data-brand="bitesize"] {
+  --primary: #6b29b3;
+  --dark: #4a1c7d;
+  --light: #dcc8ed;
+  --very-light: #eee4f6;
+}
+
+
+/* ============================================
+   BRAND: BBC WEATHER
+   ============================================ */
+
+[data-brand="weather"] {
+  --primary: #0080c7;
+  --dark: #005c8f;
+  --light: #c4e5f7;
+  --very-light: #e2f2fb;
+}
+
+
+/* ============================================
+   BRAND: CBBC
+   ============================================ */
+
+[data-brand="cbbc"] {
+  --primary: #64c800;
+  --dark: #469100;
+  --light: #d9f5be;
+  --very-light: #ecfadf;
+}
+
+
+/* ============================================
+   BRAND: CBeebies
+   ============================================ */
+
+[data-brand="cbeebies"] {
+  --primary: #00b38a;
+  --dark: #007d60;
+  --light: #c4f0e4;
+  --very-light: #e2f7f2;
+}
+
+
+/* ============================================
+   BRAND: BBC FOOD
+   ============================================ */
+
+[data-brand="food"] {
+  --primary: #b30000;
+  --dark: #7d0000;
+  --light: #f0c4c4;
+  --very-light: #f7e2e2;
+}
+
+
+/* ============================================
+   BRAND: BBC EARTH
+   ============================================ */
+
+[data-brand="earth"] {
+  --primary: #006b5a;
+  --dark: #004a3e;
+  --light: #c4e0db;
+  --very-light: #e2f0ed;
+}
+
+
+/* ============================================
+   BRAND: WORLD SERVICE
+   ============================================ */
+
+[data-brand="world-service"] {
+  --primary: #b30000;
+  --dark: #7d0000;
+  --light: #f0c4c4;
+  --very-light: #f7e2e2;
+}
+
+
+/* ============================================
+   BRAND: BBC PARLIAMENT
+   ============================================ */
+
+[data-brand="parliament"] {
+  --primary: #5a287d;
+  --dark: #3e1c57;
+  --light: #d8c8e6;
+  --very-light: #ece4f3;
+}
+
+
+/* ============================================
+   BRAND: DEFAULT (Neutral)
+   ============================================ */
+
+[data-brand="default"] {
+  --primary: #222222;
+  --dark: #000000;
+  --light: #e6e6e6;
+  --very-light: #f6f6f6;
+}
+
+
+/* ============================================
+   THEME: LIGHT (Default)
+   ============================================ */
+
+:root,
+[data-theme="light"] {
+  --text-primary: #222222;
+  --text-secondary: #5a5a5a;
+  --text-tertiary: #767676;
+  --text-inverse: #ffffff;
+
+  --bg-primary: #ffffff;
+  --bg-secondary: #f6f6f6;
+  --bg-tertiary: #ebebeb;
+  --bg-inverse: #222222;
+
+  --border-primary: #e6e6e6;
+  --border-secondary: #c8c8c8;
+}
+
+
+/* ============================================
+   THEME: DARK
+   ============================================ */
+
+[data-theme="dark"] {
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --text-tertiary: #8c8c8c;
+  --text-inverse: #222222;
+
+  --bg-primary: #121212;
+  --bg-secondary: #1f1f1f;
+  --bg-tertiary: #2a2a2a;
+  --bg-inverse: #ffffff;
+
+  --border-primary: #3c3c3c;
+  --border-secondary: #545454;
+
+  /* Adjust feedback colors for dark mode */
+  --success-light: #1a3d1a;
+  --warning-light: #3d3300;
+  --error-light: #3d1a1a;
+  --info-light: #1a2d3d;
+}
+
+
+/* ============================================
+   TYPOGRAPHY SCALE (Responsive per GEL spec)
+   ============================================ */
+
+.gel-canon {
+  font-size: 1.75rem;
+  line-height: 1.143;
+  letter-spacing: -0.5px;
+  font-weight: 400;
+}
+
+.gel-canon-bold {
+  font-size: 1.75rem;
+  line-height: 1.143;
+  letter-spacing: -0.5px;
+  font-weight: 700;
+}
+
+.gel-trafalgar {
+  font-size: 1.25rem;
+  line-height: 1.2;
+  font-weight: 400;
+}
+
+.gel-trafalgar-bold {
+  font-size: 1.25rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.gel-double-pica {
+  font-size: 1.25rem;
+  line-height: 1.2;
+  font-weight: 400;
+}
+
+.gel-double-pica-bold {
+  font-size: 1.25rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.gel-great-primer {
+  font-size: 1.125rem;
+  line-height: 1.33;
+  font-weight: 400;
+}
+
+.gel-great-primer-bold {
+  font-size: 1.125rem;
+  line-height: 1.33;
+  font-weight: 700;
+}
+
+.gel-pica {
+  font-size: 0.9375rem;
+  line-height: 1.333;
+  font-weight: 400;
+}
+
+.gel-pica-bold {
+  font-size: 0.9375rem;
+  line-height: 1.333;
+  font-weight: 700;
+}
+
+.gel-long-primer {
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+.gel-long-primer-bold {
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+.gel-brevier {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+.gel-brevier-bold {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+.gel-minion {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+.gel-minion-bold {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+/* Typography responsive scaling @400px */
+@media (min-width: 400px) {
+  .gel-canon,
+  .gel-canon-bold {
+    font-size: 2rem;
+    line-height: 1.125;
+  }
+}
+
+/* Typography responsive scaling @600px */
+@media (min-width: 600px) {
+  .gel-canon,
+  .gel-canon-bold {
+    font-size: 3.25rem;
+    line-height: 1.077;
+    letter-spacing: -1px;
+  }
+
+  .gel-trafalgar,
+  .gel-trafalgar-bold {
+    font-size: 2rem;
+    line-height: 1.125;
+  }
+
+  .gel-double-pica,
+  .gel-double-pica-bold {
+    font-size: 1.625rem;
+    line-height: 1.154;
+  }
+
+  .gel-pica,
+  .gel-pica-bold {
+    font-size: 1.125rem;
+    line-height: 1.333;
+  }
+}
+
+
+/* ============================================
+   SPACING UTILITIES
+   ============================================ */
+
+.mb-0 { margin-bottom: 0; }
+.mb-4 { margin-bottom: 4px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.mb-32 { margin-bottom: 32px; }
+.mb-48 { margin-bottom: 48px; }
+
+.mt-0 { margin-top: 0; }
+.mt-4 { margin-top: 4px; }
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mt-32 { margin-top: 32px; }
+
+.p-8 { padding: 8px; }
+.p-16 { padding: 16px; }
+.p-24 { padding: 24px; }
+.p-32 { padding: 32px; }
+
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+.gel-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+/* ============================================
+   GRID SYSTEM
+   ============================================ */
+
+/* Mobile-first: 8px gutters (Group 1: 0-399px) */
+.gel-wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 8px;
+}
+
+.gel-layout {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -8px;
+}
+
+.gel-layout__item {
+  padding-left: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Group 2+ (400px): 16px margins */
+@media (min-width: 400px) {
+  .gel-wrap {
+    padding: 0 16px;
+  }
+}
+
+/* Group 3+ (600px): 16px gutters */
+@media (min-width: 600px) {
+  .gel-layout {
+    margin-left: -16px;
+  }
+  .gel-layout__item {
+    padding-left: 16px;
+  }
+}
+
+/* Base fractions */
+.gel-1\/1 { width: 100%; }
+.gel-1\/2 { width: 50%; }
+.gel-1\/3 { width: 33.333%; }
+.gel-2\/3 { width: 66.666%; }
+.gel-1\/4 { width: 25%; }
+.gel-3\/4 { width: 75%; }
+.gel-1\/5 { width: 20%; }
+.gel-2\/5 { width: 40%; }
+.gel-3\/5 { width: 60%; }
+.gel-4\/5 { width: 80%; }
+
+/* Small breakpoint (400px) */
+@media (min-width: 400px) {
+  .gel-1\/1\@s { width: 100%; }
+  .gel-1\/2\@s { width: 50%; }
+  .gel-1\/3\@s { width: 33.333%; }
+  .gel-2\/3\@s { width: 66.666%; }
+  .gel-1\/4\@s { width: 25%; }
+  .gel-3\/4\@s { width: 75%; }
+}
+
+/* Medium breakpoint (600px) */
+@media (min-width: 600px) {
+  .gel-1\/1\@m { width: 100%; }
+  .gel-1\/2\@m { width: 50%; }
+  .gel-1\/3\@m { width: 33.333%; }
+  .gel-2\/3\@m { width: 66.666%; }
+  .gel-1\/4\@m { width: 25%; }
+  .gel-3\/4\@m { width: 75%; }
+  .gel-1\/5\@m { width: 20%; }
+  .gel-2\/5\@m { width: 40%; }
+}
+
+/* Large breakpoint (900px) */
+@media (min-width: 900px) {
+  .gel-1\/1\@l { width: 100%; }
+  .gel-1\/2\@l { width: 50%; }
+  .gel-1\/3\@l { width: 33.333%; }
+  .gel-2\/3\@l { width: 66.666%; }
+  .gel-1\/4\@l { width: 25%; }
+  .gel-3\/4\@l { width: 75%; }
+  .gel-1\/5\@l { width: 20%; }
+}
+
+/* Extra large breakpoint (1008px) */
+@media (min-width: 1008px) {
+  .gel-1\/1\@xl { width: 100%; }
+  .gel-1\/2\@xl { width: 50%; }
+  .gel-1\/3\@xl { width: 33.333%; }
+  .gel-2\/3\@xl { width: 66.666%; }
+  .gel-1\/4\@xl { width: 25%; }
+  .gel-3\/4\@xl { width: 75%; }
+}
+
+/* Group 6 breakpoint (1280px) */
+@media (min-width: 1280px) {
+  .gel-1\/1\@xxl { width: 100%; }
+  .gel-1\/2\@xxl { width: 50%; }
+  .gel-1\/3\@xxl { width: 33.333%; }
+  .gel-2\/3\@xxl { width: 66.666%; }
+  .gel-1\/4\@xxl { width: 25%; }
+  .gel-3\/4\@xxl { width: 75%; }
+  .gel-1\/5\@xxl { width: 20%; }
+  .gel-2\/5\@xxl { width: 40%; }
+  .gel-3\/5\@xxl { width: 60%; }
+  .gel-4\/5\@xxl { width: 80%; }
+}

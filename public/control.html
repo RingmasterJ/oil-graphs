@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en" data-brand="news" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RINGER - Broadcast Control</title>
+  <link rel="stylesheet" href="gel/tokens.css">
+  <link rel="stylesheet" href="gel/components.css">
+  <style>
+    @font-face { font-family: 'ReithSans'; font-display: swap; font-weight: 400; src: url(https://static.files.bbci.co.uk/fonts/reith/2.512/BBCReithSans_W_Rg.woff2) format('woff2'); }
+    @font-face { font-family: 'ReithSans'; font-display: swap; font-weight: 700; src: url(https://static.files.bbci.co.uk/fonts/reith/2.512/BBCReithSans_W_Bd.woff2) format('woff2'); }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: ReithSans, Helvetica, Arial, sans-serif;
+      font-size: 1rem;
+      line-height: 1.4;
+      color: var(--text-primary);
+      background: var(--bg-secondary);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- Navigation ---- */
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 8px 16px;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-primary);
+    }
+    .nav-logo { display: flex; color: var(--text-primary); text-decoration: none; }
+    .nav-logo svg { height: 32px; width: auto; shape-rendering: crispEdges; }
+    .nav-brand {
+      font-size: 1.125rem;
+      font-weight: 700;
+      padding-left: 16px;
+      border-left: 1px solid var(--border-primary);
+      line-height: 1.2;
+    }
+    .nav-brand-sub {
+      font-size: 0.625rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      letter-spacing: 0.3px;
+      display: block;
+    }
+    .nav-overlay-link {
+      margin-left: auto;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+    .nav-overlay-link:hover { color: var(--text-primary); text-decoration: underline; }
+
+    /* ---- Layout ---- */
+    .wrap { max-width: 720px; margin: 0 auto; padding: 32px 16px; }
+
+    /* ---- Section ---- */
+    .section { margin-bottom: 32px; }
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary);
+    }
+
+    /* ---- Cards ---- */
+    .card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-primary);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    /* ---- Status grid ---- */
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+    }
+    .status-item { text-align: center; padding: 16px; }
+    .status-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .status-value.price { color: #00BC97; }
+    .status-label {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ---- Range toggle ---- */
+    .toggle-group {
+      display: flex;
+      gap: 0;
+      border: 2px solid var(--text-primary);
+    }
+    .toggle-btn {
+      flex: 1;
+      padding: 12px 20px;
+      font-family: ReithSans, Helvetica, Arial, sans-serif;
+      font-size: 0.9375rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: background 150ms ease, color 150ms ease;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      text-align: center;
+    }
+    .toggle-btn + .toggle-btn { border-left: 2px solid var(--text-primary); }
+    .toggle-btn.active {
+      background: var(--text-primary);
+      color: var(--bg-primary);
+    }
+    .toggle-btn:hover:not(.active) {
+      background: var(--bg-secondary);
+    }
+
+    /* ---- Feedback ---- */
+    .feedback {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-top: 12px;
+      min-height: 1.4em;
+    }
+    .feedback.success { color: #0a7b0a; }
+
+    /* ---- Trading days list ---- */
+    .day-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .day-list li {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      padding: 4px 12px;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    /* ---- Standby controls ---- */
+    .standby-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .standby-label {
+      font-size: 0.9375rem;
+      font-weight: 700;
+    }
+    .switch {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      cursor: pointer;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch .slider {
+      position: absolute;
+      inset: 0;
+      background: var(--grey-200, #c8c8c8);
+      border-radius: 28px;
+      transition: background 200ms ease;
+    }
+    .switch .slider::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 22px; height: 22px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 200ms ease;
+    }
+    .switch input:checked + .slider {
+      background: #00BC97;
+    }
+    .switch input:checked + .slider::after {
+      transform: translateX(24px);
+    }
+    .live-btns {
+      display: flex;
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .btn-live, .btn-dark {
+      flex: 1;
+      padding: 14px 20px;
+      font-family: ReithSans, Helvetica, Arial, sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      transition: opacity 150ms ease, filter 150ms ease;
+    }
+    .btn-live {
+      background: #00BC97;
+      color: white;
+    }
+    .btn-live:hover { filter: brightness(1.1); }
+    .btn-dark {
+      background: var(--text-primary);
+      color: var(--bg-primary);
+    }
+    .btn-dark:hover { filter: brightness(1.3); }
+    .btn-live:disabled, .btn-dark:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      filter: none;
+    }
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      margin-top: 12px;
+    }
+    .live-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--grey-200, #c8c8c8);
+    }
+    .live-dot.on {
+      background: #00BC97;
+      box-shadow: 0 0 6px #00BC97;
+    }
+    .live-dot.off { background: var(--grey-400, #8c8c8c); }
+
+    /* ---- Preview ---- */
+    .preview-frame {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: 1px solid var(--border-primary);
+      background: white;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="/" class="nav-logo">
+      <svg viewBox="0 0 1024 384" aria-hidden="true">
+        <path fill="currentColor" d="M64,64v256h256V64H64z M242.5,244.7c-4.4,6.2-10.6,10.9-18.7,14.3c-8.1,3.4-17.8,5-29.2,5h-57.4V120h54c15.9,0,28.3,3.2,37,9.6c8.7,6.4,13.1,15.5,13.1,27.5c0,6.8-1.6,12.8-4.7,17.8c-3.1,5-7.8,9-13.9,12c8.5,2.8,15,7.3,19.5,13.4c4.5,6.1,6.8,13.5,6.8,22.3C249.1,231.1,246.9,238.5,242.5,244.7z M205.9,174.3c4-3.3,6-7.9,6-13.8c0-11.4-7.8-17.1-23.3-17.1h-22.1v35.8h22.1C196.2,179.2,201.9,177.6,205.9,174.3z M192.3,201.8h-25.8v38.9h25.5c8.7,0,15.5-1.6,20.2-4.9c4.7-3.3,7-8,7-14.2C219.1,208.3,210.2,201.8,192.3,201.8z M384,64v256h256V64H384z M562.5,244.7c-4.4,6.2-10.6,10.9-18.7,14.3c-8.1,3.4-17.8,5-29.2,5h-57.4V120h54c15.9,0,28.3,3.2,37,9.6c8.7,6.4,13.1,15.5,13.1,27.5c0,6.8-1.6,12.8-4.7,17.8c-3.1,5-7.8,9-13.9,12c8.5,2.8,15,7.3,19.5,13.4c4.5,6.1,6.8,13.5,6.8,22.3C569.1,231.1,566.9,238.5,562.5,244.7z M525.9,174.3c4-3.3,6-7.9,6-13.8c0-11.4-7.8-17.1-23.3-17.1h-22.1v35.8h22.1C516.2,179.2,521.9,177.6,525.9,174.3z M512.3,201.8h-25.8v38.9h25.5c8.7,0,15.5-1.6,20.2-4.9c4.7-3.3,7-8,7-14.2C539.1,208.3,530.2,201.8,512.3,201.8z M704,320h256V64H704V320z M887.9,254.9c-6,3.3-12.9,5.9-20.7,7.8c-7.9,1.9-16.1,2.9-24.8,2.9c-11.5,0-21.9-1.7-31.1-5c-9.2-3.4-17-8.2-23.4-14.5c-6.4-6.3-11.2-14-14.6-23.2c-3.4-9.1-5.1-19.4-5.1-30.9c0-11.2,1.8-21.3,5.3-30.3c3.5-9,8.6-16.7,15.2-23.2c6.6-6.4,14.6-11.4,23.9-14.8c9.3-3.4,19.7-5.1,31.2-5.1c8,0,15.5,0.8,22.7,2.5c7.1,1.6,13.7,4,19.8,7.2v28c-5.6-3.7-11.6-6.5-18.1-8.4c-6.5-1.9-13.3-2.9-20.5-2.9c-9.9,0-18.3,1.8-25.3,5.5c-7,3.7-12.3,9-16.1,16c-3.7,7-5.6,15.5-5.6,25.5c0,10,1.8,18.5,5.4,25.6c3.6,7,8.8,12.4,15.6,16.1c6.8,3.7,15.1,5.5,24.9,5.5c14.9,0,28.7-3.9,41.3-11.6V254.9z"/>
+      </svg>
+    </a>
+    <div class="nav-brand">RINGER<span class="nav-brand-sub">Resilient Integrated Newsroom Graphics Engine Repo</span></div>
+    <a href="/" class="nav-overlay-link" target="_blank">Open overlay &rarr;</a>
+  </nav>
+
+  <main class="wrap">
+
+    <!-- Status -->
+    <div class="section">
+      <h2 class="section-title">Live Status</h2>
+      <div class="card">
+        <div class="status-grid">
+          <div class="status-item">
+            <div class="status-value price" id="stat-price">--</div>
+            <div class="status-label">Current Price</div>
+          </div>
+          <div class="status-item">
+            <div class="status-value" id="stat-bars">--</div>
+            <div class="status-label">Bars in DB</div>
+          </div>
+          <div class="status-item">
+            <div class="status-value" id="stat-time">--</div>
+            <div class="status-label">Last Update</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart Range -->
+    <div class="section">
+      <h2 class="section-title">Chart Range</h2>
+      <div class="card">
+        <p style="margin: 0 0 12px; font-size: 0.9375rem; color: var(--text-secondary);">
+          Select the time range displayed on the broadcast overlay. Changes take effect on the next chart refresh (up to 60 seconds).
+        </p>
+        <div class="toggle-group">
+          <button class="toggle-btn active" data-range="today">Current Day</button>
+          <button class="toggle-btn" data-range="24h">Past 24 Hours</button>
+        </div>
+        <div class="feedback" id="range-feedback"></div>
+      </div>
+    </div>
+
+    <!-- Standby / Live -->
+    <div class="section">
+      <h2 class="section-title">Standby Mode</h2>
+      <div class="card">
+        <p style="margin: 0 0 12px; font-size: 0.9375rem; color: var(--text-secondary);">
+          When enabled, the overlay starts on a white screen and waits to be triggered. OBS will trigger it automatically when the source goes live. You can also trigger manually below.
+        </p>
+        <div class="standby-row">
+          <span class="standby-label">Standby Mode</span>
+          <label class="switch">
+            <input type="checkbox" id="standby-toggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="live-btns">
+          <button class="btn-live" id="btn-go-live" disabled>GO LIVE</button>
+          <button class="btn-dark" id="btn-go-dark" disabled>GO DARK</button>
+        </div>
+        <div class="live-indicator">
+          <span class="live-dot" id="live-dot"></span>
+          <span id="live-status-text">STANDBY OFF</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trading Days -->
+    <div class="section">
+      <h2 class="section-title">Data History</h2>
+      <div class="card">
+        <p style="margin: 0 0 12px; font-size: 0.9375rem; color: var(--text-secondary);">
+          Trading days with data in the database (kept for 7 days):
+        </p>
+        <ul class="day-list" id="day-list">
+          <li>Loading...</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div class="section">
+      <h2 class="section-title">Overlay Preview</h2>
+      <iframe src="/" class="preview-frame" id="preview-frame"></iframe>
+    </div>
+
+  </main>
+
+  <script src="control.js"></script>
+</body>
+</html>

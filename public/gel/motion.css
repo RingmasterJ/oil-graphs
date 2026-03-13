@@ -1,0 +1,282 @@
+/**
+ * BBC GEL Motion System - Elevate
+ * Version: 1.0.0
+ * 
+ * BBC News uses ONLY the Elevate motion behaviour.
+ * Elevate is subtle, understated animation that keeps focus on content.
+ * 
+ * CONSTRAINTS:
+ * - Max 2 movements per animation sequence
+ * - Max 25% stretch (scaleY: 1.25)
+ * - Max 25% contraction (scaleY: 0.75)
+ * - Subtle, unhurried pace
+ * - Bottom-anchored scaling for BBC blocks
+ */
+
+
+/* ============================================
+   EASING CURVES
+   ============================================ */
+
+:root {
+  /* Elevate: Smooth, symmetrical, understated */
+  --ease-elevate: cubic-bezier(0.50, 0.00, 0.50, 1.00);
+  
+  /* Standard: Energy without overpowering */
+  --ease-standard: cubic-bezier(0.75, 0.00, 0.15, 1.00);
+  
+  /* Decelerate: Quick entry, smooth stop */
+  --ease-decelerate: cubic-bezier(0.00, 0.00, 0.15, 1.00);
+  
+  /* Accelerate: Smooth start, quick exit */
+  --ease-accelerate: cubic-bezier(0.85, 0.00, 1.00, 1.00);
+}
+
+
+/* ============================================
+   BBC LOGO ANIMATIONS
+   
+   The BBC blocks logo requires special handling:
+   - Each block is a separate <g> element
+   - Transform origin at BOTTOM CENTER of each block
+   - Blocks animate with slight stagger (not perfect sync)
+   
+   Block positions (in 1024x384 viewBox):
+   - Block 1 (B): transform-origin: 192px 320px
+   - Block 2 (B): transform-origin: 512px 320px
+   - Block 3 (C): transform-origin: 832px 320px
+   ============================================ */
+
+/* Intro: Blocks grow up from bottom */
+@keyframes elevate-intro {
+  0% {
+    transform: scaleY(0);
+  }
+  70% {
+    transform: scaleY(1.07); /* Slight overshoot */
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+/* Ambient: Subtle breathing while idle */
+@keyframes elevate-ambient {
+  0%, 100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.07); /* Max 7% for subtle effect */
+  }
+}
+
+/* Outro: Blocks shrink down to bottom */
+@keyframes elevate-outro {
+  0% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(0);
+  }
+}
+
+/* Transition: Stretch-contract for scene changes */
+@keyframes elevate-transition {
+  0% {
+    transform: scaleY(1);
+  }
+  35% {
+    transform: scaleY(1.15); /* Stretch up */
+  }
+  65% {
+    transform: scaleY(0.92); /* Contract slightly */
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+
+/* ============================================
+   GENERAL UI ANIMATIONS
+   ============================================ */
+
+/* Fade in */
+@keyframes elevate-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Fade out */
+@keyframes elevate-fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Slide up (for content reveal) */
+@keyframes elevate-slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide down (for dropdowns) */
+@keyframes elevate-slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scale in (for modals, tooltips) */
+@keyframes elevate-scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+/* ============================================
+   ANIMATION UTILITY CLASSES
+   ============================================ */
+
+.anim-fade-in {
+  animation: elevate-fade-in 0.3s var(--ease-elevate) forwards;
+}
+
+.anim-fade-out {
+  animation: elevate-fade-out 0.3s var(--ease-elevate) forwards;
+}
+
+.anim-slide-up {
+  animation: elevate-slide-up 0.4s var(--ease-elevate) forwards;
+}
+
+.anim-slide-down {
+  animation: elevate-slide-down 0.3s var(--ease-elevate) forwards;
+}
+
+.anim-scale-in {
+  animation: elevate-scale-in 0.3s var(--ease-elevate) forwards;
+}
+
+/* Stagger delays */
+.anim-delay-1 { animation-delay: 80ms; }
+.anim-delay-2 { animation-delay: 160ms; }
+.anim-delay-3 { animation-delay: 240ms; }
+.anim-delay-4 { animation-delay: 320ms; }
+
+
+/* ============================================
+   TRANSITION UTILITIES
+   ============================================ */
+
+.transition-colors {
+  transition: color 0.2s var(--ease-elevate),
+              background-color 0.2s var(--ease-elevate),
+              border-color 0.2s var(--ease-elevate);
+}
+
+.transition-opacity {
+  transition: opacity 0.2s var(--ease-elevate);
+}
+
+.transition-transform {
+  transition: transform 0.3s var(--ease-elevate);
+}
+
+.transition-all {
+  transition: all 0.2s var(--ease-elevate);
+}
+
+
+/* ============================================
+   REDUCED MOTION
+   
+   Respect user preferences for reduced motion.
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* ============================================
+   JAVASCRIPT HELPER FUNCTIONS
+   
+   Include this in your <script> tag:
+   ============================================
+   
+   const elevateEase = 'cubic-bezier(0.50, 0.00, 0.50, 1.00)';
+   
+   // Animate BBC logo intro
+   function playLogoIntro(logoSelector) {
+     const blocks = document.querySelectorAll(`${logoSelector} .block`);
+     blocks.forEach((block, i) => {
+       block.style.animation = 'none';
+       block.style.transform = 'scaleY(0)';
+       block.offsetHeight; // Force reflow
+       block.style.animation = `elevate-intro 0.5s ${elevateEase} forwards`;
+       block.style.animationDelay = `${i * 80}ms`;
+     });
+   }
+   
+   // Animate BBC logo outro
+   function playLogoOutro(logoSelector) {
+     const blocks = document.querySelectorAll(`${logoSelector} .block`);
+     blocks.forEach((block, i) => {
+       block.style.animation = 'none';
+       block.style.transform = 'scaleY(1)';
+       block.offsetHeight;
+       block.style.animation = `elevate-outro 0.5s ${elevateEase} forwards`;
+       block.style.animationDelay = `${i * 80}ms`;
+     });
+   }
+   
+   // Start ambient loop
+   function playLogoAmbient(logoSelector) {
+     const blocks = document.querySelectorAll(`${logoSelector} .block`);
+     blocks.forEach((block, i) => {
+       block.style.animation = `elevate-ambient 2s ${elevateEase} infinite`;
+       block.style.animationDelay = `${i * 200}ms`;
+     });
+   }
+   
+   // Stop all logo animation
+   function stopLogoAnimation(logoSelector) {
+     const blocks = document.querySelectorAll(`${logoSelector} .block`);
+     blocks.forEach(block => {
+       block.style.animation = 'none';
+       block.style.transform = 'scaleY(1)';
+     });
+   }
+   
+   ============================================ */
